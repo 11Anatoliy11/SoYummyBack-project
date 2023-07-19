@@ -1,5 +1,4 @@
 const { Schema, model, default: mongoose } = require("mongoose");
-// const categories = require("../data/categories");
 
 const recipeSchema = new Schema(
   {
@@ -10,7 +9,6 @@ const recipeSchema = new Schema(
 
     category: {
       type: String,
-      //  [...categories],
       required: [true, "Set category for recipe"],
     },
 
@@ -29,7 +27,7 @@ const recipeSchema = new Schema(
 
     thumb: {
       type: String,
-      required: [true, "Set image for recipe"],
+      // required: [true, "Set image for recipe"],
     },
 
     preview: {
@@ -58,15 +56,15 @@ const recipeSchema = new Schema(
       type: Array,
       default: [],
     },
-    id: {
+    owner: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
       required: true,
     },
   },
 
   { versionKey: false, timestamps: true }
 );
-// recipeSchema.post("save", handleMongooseError);
 
 const Recipe = model("recipe", recipeSchema);
 

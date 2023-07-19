@@ -1,3 +1,5 @@
+// recipes/category-list
+
 const categoriesList = require("../../data/categories");
 
 const getCategoryList = async (req, res) => {

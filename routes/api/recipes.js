@@ -10,10 +10,37 @@ recipesRouter.get(
   ctrlWrapper(ctrlRecipes.getCategoriesList)
 );
 recipesRouter.get(
+  "/popular",
+  authenticate,
+  ctrlWrapper(ctrlRecipes.getPopularRecipe)
+);
+recipesRouter.get(
   "/main-page",
   authenticate,
   ctrlWrapper(ctrlRecipes.getMainPage)
 );
-recipesRouter.get("/:id", authenticate, ctrlWrapper(ctrlRecipes.getRecipeByID));
+recipesRouter.get(
+  "/id/:id",
+  authenticate,
+  ctrlWrapper(ctrlRecipes.getRecipeByID)
+);
+
+recipesRouter.get(
+  "/:category",
+  authenticate,
+  ctrlWrapper(ctrlRecipes.getRecipeByCategory)
+);
+
+recipesRouter.get(
+  "/search/title",
+  authenticate,
+  ctrlWrapper(ctrlRecipes.searchByTitle)
+);
+
+recipesRouter.get(
+  "/search/ingredient",
+  authenticate,
+  ctrlWrapper(ctrlRecipes.searchByIngredient)
+);
 
 module.exports = recipesRouter;

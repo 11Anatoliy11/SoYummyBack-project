@@ -1,28 +1,46 @@
-const path = require("path");
-const fs = require("fs/promises");
-const Jimp = require("jimp");
 const User = require("../../models/user");
-
-const avatarsDir = path.join(__dirname, "../", "../", "public", "avatars");
+const cloudinary = require("cloudinary").v2;
 
 const updateAvatar = async (req, res) => {
-  const { _id } = req.user;
-  const { path: tmpUpload, originalname } = req.file;
-  const filename = `${_id}_${originalname}`;
-  const resultUpload = path.join(avatarsDir, filename);
+  const { _id: id } = req.user;
+  const { name } = req.body;
+  const avatar = req.file;
+  console.log(avatar);
+  if (!name && !avatar) {
+    return res.status(422).json({
+      code: 422,
+      message: "Missing name and avatar in request",
+    });
+  }
 
-  await fs.rename(tmpUpload, resultUpload);
+  const user = await User.findById(id);
+  console.log(user);
 
-  const image = await Jimp.read(resultUpload);
-  image.resize(250, 250);
-  await image.writeAsync(resultUpload);
+  if (!user) {
+    return res.status(404).json({
+      code: 404,
+      message: "User not found",
+    });
+  }
 
-  const avatarURL = path.join("avatars", filename);
-  await User.findByIdAndUpdate(_id, { avatarURL });
+  if (avatar) {
+    const { secure_url: avatarURL } = await cloudinary.uploader.upload(
+      avatar.path
+    );
+    user.avatarURL = avatarURL;
+    console.log(avatarURL);
+  }
 
-  res.json({
-    avatarURL,
+  if (name) {
+    user.name = name;
+  }
+
+  const updatedUser = await user.save();
+
+  res.status(200).json({
+    _id: updatedUser._id,
+    name: updatedUser.name,
+    avatarURL: updatedUser.avatarURL,
   });
 };
-
 module.exports = updateAvatar;

@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const gravatar = require("gravatar");
+// const gravatar = require("gravatar");
 const User = require("../../models/user");
 const jwt = require("jsonwebtoken");
 const RequestError = require("../../helpers/RequestError");
@@ -16,11 +16,11 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const avatarURL = gravatar.url(email);
+  // const avatarURL = gravatar.url(email);
   await User.create({
     ...req.body,
     password: hashPassword,
-    avatarURL,
+    // avatarURL,
   });
   const { _id } = await User.findOne({ email });
 
@@ -45,7 +45,7 @@ const register = async (req, res) => {
       name: newUser.name,
       email: newUser.email,
       token: newUser.token,
-      avatarURL: newUser.avatarURL,
+      // avatarURL: newUser.avatarURL,
     },
   });
 };
